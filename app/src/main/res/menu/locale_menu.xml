@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group
+        android:title="format"
+        android:id="@+id/locale_menu_fmt"
+        android:checkableBehavior="all">
+        <item
+            android:checked="true"
+            android:id="@+id/locale_menu_fmt_d"
+            android:title="format %d" />
+        <item
+            android:checked="true"
+            android:id="@+id/locale_menu_fmt_f"
+            android:title="format %f" />
+
+        <item
+            android:checked="true"
+            android:id="@+id/locale_menu_fmt_g"
+            android:title="format %g" />
+    </group>
+
+    <group
+        android:title="calendar"
+        android:id="@+id/locale_menu_cal"
+        android:checkableBehavior="all">
+
+        <item
+            android:checked="true"
+            android:id="@+id/locale_menu_cal_time"
+            android:title="Time hh:mm:ss" />
+
+        <item
+            android:checked="true"
+            android:id="@+id/locale_menu_cal_date"
+            android:title="Date yyyy-mm-dd" />
+
+        <item
+            android:checked="true"
+            android:id="@+id/locale_menu_cal_day"
+            android:title="Date day name" />
+
+        <item
+            android:checked="true"
+            android:id="@+id/locale_menu_cal_month"
+            android:title="Date month name" />
+
+        <item
+            android:checked="true"
+            android:id="@+id/locale_menu_cal_full"
+            android:title="Date Full" />
+    </group>
+</menu>

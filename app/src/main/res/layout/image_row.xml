@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="#e0e0e0"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="50dp"
+    android:padding="8dp">
+
+    <ImageView
+        tools:background="#502020"
+        android:id="@+id/thumbImage"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        tools:text="Title"
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/thumbImage"
+        android:minLines="2"
+        android:paddingTop="5dp"
+        android:textStyle="bold" />
+
+    <TextView
+        tools:text="Size"
+        android:id="@+id/size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/thumbImage" />
+
+    <TextView
+        tools:text="Date"
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/size"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="custom_SeekBarStyle" format="reference" />
+    <declare-styleable name="custom_SeekBar">
+
+        <attr name="tickMin" format="integer" />
+        <attr name="tickMax" format="integer" />
+        <attr name="tickStep" format="integer" />
+        <attr name="tickWidth" format="integer" />
+        <attr name="showTick" format="boolean" />
+        <attr name="tickColor" format="color" />
+        <attr name="tickUnder" format="boolean" />
+
+        <attr name="tickMark" format="reference" />
+    </declare-styleable>
+
+
+    <declare-styleable name="ExpandablePanel">
+        <attr name="handle" format="reference" />
+        <attr name="content" format="reference" />
+        <attr name="collapsedDim" format="dimension"/>
+        <attr name="animationDuration" format="integer"/>
+    </declare-styleable>
+</resources>

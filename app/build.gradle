@@ -1,0 +1,46 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'perftester'
+            keyPassword 'Salem2nh-k'
+            storeFile file('/Users/ldennis/projects/projects-android/keystores/all-perftester.jks')
+            storePassword 'Salem2nh-p'
+        }
+    }
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+    defaultConfig {
+        applicationId "com.landenlabs.allperfimages"
+        minSdkVersion 17
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        resValue "string", "targetSdkVersion", targetSdkVersion.apiString
+        resValue "string", "compileSdkVersion", compileSdkVersion
+        resValue "string", "buildToolsVersion", buildToolsVersion
+        resValue "string", "javaVersion", org.gradle.internal.jvm.Jvm.current().javaVersion.toString()
+        resValue "string", "gradleVersion", GradleVersion.current().getVersion()
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+    }
+    productFlavors {
+    }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:design:25.2.0'
+    compile 'com.google.android.gms:play-services-maps:9.6.0'
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/dup_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duplicates:" />
+
+    <Button
+        android:id="@+id/auto_scroll_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Auto Scroll" />
+
+    <SeekBar
+        android:id="@+id/dup_count_sb"
+        style="@android:style/Widget.SeekBar"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:background="#ffffff"
+        android:max="10" />
+
+    <TextView
+        android:id="@+id/rate_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rate: xxxx" />
+</GridLayout>

@@ -1,0 +1,8 @@
+<fragment
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/image3_id"
+    android:name="com.landenlabs.allperfimages.tests.image.Image3Frag"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout="@layout/image3_frag" />
