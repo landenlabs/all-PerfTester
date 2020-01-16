@@ -51,9 +51,12 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static com.landenlabs.allperfimages.ui.Ui.viewById;
 
@@ -105,7 +108,7 @@ public class LocaleTestFrag extends BaseFrag implements
             case R.id.locale_menu_fmt_d:
             case R.id.locale_menu_fmt_f:
             case R.id.locale_menu_fmt_g:
-                item.setChecked(!item.isCheckable());
+                item.setChecked(!item.isChecked());
                 return true;
 
             case R.id.locale_menu_cal_time:
@@ -113,7 +116,7 @@ public class LocaleTestFrag extends BaseFrag implements
             case R.id.locale_menu_cal_day:
             case R.id.locale_menu_cal_month:
             case R.id.locale_menu_cal_full:
-                item.setChecked(!item.isCheckable());
+                item.setChecked(!item.isChecked());
                 return true;
         }
 
@@ -236,7 +239,7 @@ public class LocaleTestFrag extends BaseFrag implements
         languages.clear();
         String localeFmtStr;
         String abbrLang, language, testFmt;
-        String lastIso = "xxx";
+        Set<String> isoSet = new HashSet<>();
 
         Locale arabic = null;
         Locale ukrainian = null;
@@ -266,15 +269,16 @@ public class LocaleTestFrag extends BaseFrag implements
                 */
             }
 
-            if (testRegions || !lastIso.equals(locale.getISO3Language())) {
+            String iso = locale.getISO3Language();
+            if (testRegions || !isoSet.contains(iso)) {
                 languages.get(testFmt).add(locale);
             }
-            lastIso = locale.getISO3Language();
+            isoSet.add(iso);
 
-            if (lastIso.equals("ara")) {    // language Arabic
+            if (iso.equals("ara")) {    // language Arabic
                 arabic = locale;
             }
-            if (lastIso.equals("ukr")) {    // language Ukrainian
+            if (iso.equals("ukr")) {    // language Ukrainian
                 ukrainian = locale;
             }
 
@@ -297,6 +301,14 @@ public class LocaleTestFrag extends BaseFrag implements
             testLocaleAsync.sendProgress(localeCnt*100 / locales.length, resultSb);
             if (testLocaleAsync.isCancelled())
                 break;
+        }
+
+        Iterator<Map.Entry<String, List<Locale>>> iter = languages.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String, List<Locale>> entry = iter.next();
+            if (entry.getValue().isEmpty()) {
+                iter.remove();
+            }
         }
 
          /*
@@ -347,7 +359,7 @@ public class LocaleTestFrag extends BaseFrag implements
             resultSb.append("\nCompileSDK:").append(getString(R.string.compileSdkVersion));
             resultSb.append("\nBuildTools:").append(getString(R.string.buildToolsVersion));
             resultSb.append("\nJavaVersion:").append(getString(R.string.javaVersion));
-            resultSb.append("\nGradleVersion:").append(getString(R.string.gradleVersion));
+            // resultSb.append("\nGradleVersion:").append(getString(R.string.gradleVersion));
         }
         resultSb.append("\n\n");
 

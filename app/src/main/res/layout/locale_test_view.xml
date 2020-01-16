@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:orientation="horizontal"
+        >
 
         <Button
             android:id="@+id/runTestBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/run_test" />
+            android:text="@string/run_test"/>
 
         <CheckBox
             android:id="@+id/testLocalRegionsCb"
-            android:checked="true"
-            android:text="Regions"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Regions"/>
 
         <Button
             android:id="@+id/shareBtn"
-            android:enabled="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="Share Results"/>
 
         <!--
@@ -45,39 +45,39 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="0.92"
             android:background="#c0c0ff"
-            android:progressDrawable="@android:drawable/progress_horizontal"
 
             android:max="100"
-            android:layout_weight="0.92"/>
+            android:progressDrawable="@android:drawable/progress_horizontal"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/localeFmtCb"
-            android:checked="true"
-            android:text="format(...)"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="format(...)"/>
 
         <CheckBox
             android:id="@+id/localeNumCb"
-            android:checked="true"
-            android:text="NumberFormat"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="NumberFormat"/>
 
         <CheckBox
             android:id="@+id/localeCalCb"
-            android:checked="true"
-            android:text="Calendar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Calendar"/>
 
     </LinearLayout>
 
@@ -90,10 +90,10 @@
         />
 
     <ExpandableListView
-            android:id="@+id/locale_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+        android:id="@+id/locale_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         />
 
     <com.landenlabs.allperfimages.ui.ExpandablePanel
@@ -139,10 +139,11 @@
         </RelativeLayout>
     </com.landenlabs.allperfimages.ui.ExpandablePanel>
 
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="20dp"
         android:background="#ffe0e0"
-        android:text=" " />
+        android:text=" "/>
 
 </LinearLayout>

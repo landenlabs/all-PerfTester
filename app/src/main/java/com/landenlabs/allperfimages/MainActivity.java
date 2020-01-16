@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
             new PageItem("Image3", R.layout.page3_frag),
             new PageItem("String", R.layout.string_test_frag),
             new PageItem("Locale", R.layout.locale_test_frag),
+            new PageItem("Math0", R.layout.math0_test_frag),
     };
 
     // =============================================================================================

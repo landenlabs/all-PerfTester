@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:title="--Math Tests--" />
+    <group
+        android:title="test"
+        android:id="@+id/math_menu_test"
+        android:checkableBehavior="all">
+        <item
+            android:checked="true"
+            android:id="@+id/math_menu_zip"
+            android:title="zipcode test" />
+        <item
+            android:checked="false"
+            android:id="@+id/math_menu_sfc"
+            android:title="surface test" />
+    </group>
+
 </menu>

@@ -21,11 +21,12 @@
  *
  */
 
-package com.landenlabs.allperfimages.tests.locale;
+package com.landenlabs.allperfimages.tests.math;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,49 +44,49 @@ import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.landenlabs.allperfimages.BaseFrag;
 import com.landenlabs.allperfimages.R;
 import com.landenlabs.allperfimages.ui.ShareUtil;
 
-import java.text.NumberFormat;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import static com.landenlabs.allperfimages.ui.Ui.viewById;
 
 /**
  * @author Dennis Lang (LanDen Labs)
- * @see <a href="http://landenlabs.com/android/index-m.html"> author's web-site </a>
+ * @see <a href="http://landenlabs.com"> author's web-site </a>
  */
 
-public class LocaleTestFrag extends BaseFrag implements
+public class Math0TestFrag extends BaseFrag implements
         AbsListView.OnScrollListener,
         View.OnClickListener {
 
-
     TextView mResultsTv;
     ProgressBar mProgress;
-    CheckBox mFmtCb, mNumCb, mCalCb;    // String.format(), NumericFormat, Calendare format.
-    CheckBox mTestRegionsCb;
+    CheckBox mNanCb, mNotZeroCb, mZeroCb;
     Button mRunBtn, mShareBtn;
     String mRunText;
     Menu mMenu;
 
-    TestLocaleAsync mTestLocalAsync;
-    Map<String, List<Locale>> languages = new HashMap<>();
+    TestMathAsync mTestMathAsync;
+    SortedMap<String, List<String>> testResults = new TreeMap<>();
+    Map<String, String> posZipcodes = new HashMap<>();
+
+    private static final float EARTH_RADIUS_METERS = 6378137f; // meters WGS84 Major axis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
-        mRootView = inflater.inflate(R.layout.locale_test_view, container, false);
+        mRootView = inflater.inflate(R.layout.math0_test_view, container, false);
 
         setup();
         return mRootView;
@@ -97,27 +98,33 @@ public class LocaleTestFrag extends BaseFrag implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        mMenu = menu.addSubMenu("Locale Options");
-        inflater.inflate(R.menu.locale_menu, mMenu);
+        mMenu = menu.addSubMenu("Math Options");
+        inflater.inflate(R.menu.math0_menu, mMenu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.locale_menu_fmt_d:
-            case R.id.locale_menu_fmt_f:
-            case R.id.locale_menu_fmt_g:
-                item.setChecked(!item.isChecked());
-                return true;
+            case R.id.math_menu_zip:
+                item.setChecked(true);
+                mMenu.findItem(R.id.math_menu_sfc).setChecked(false);
+                break;
+            case R.id.math_menu_sfc:
+                item.setChecked(true);
+                mMenu.findItem(R.id.math_menu_zip).setChecked(false);
+                break;
+        }
 
-            case R.id.locale_menu_cal_time:
-            case R.id.locale_menu_cal_date:
-            case R.id.locale_menu_cal_day:
-            case R.id.locale_menu_cal_month:
-            case R.id.locale_menu_cal_full:
-                item.setChecked(!item.isChecked());
-                return true;
+        if (item.isChecked()) {
+            switch (id) {
+                case R.id.math_menu_zip:
+                    addZipcodeTests();
+                    return true;
+                case R.id.math_menu_sfc:
+                    addSurfaceTests();
+                    return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -128,12 +135,12 @@ public class LocaleTestFrag extends BaseFrag implements
 
     @Override
     public int getFragId() {
-        return R.id.locale_test_id;
+        return R.id.math_test_id;
     }
 
     @Override
     public String getName() {
-        return "Locale";
+        return "Math0";
     }
 
     @Override
@@ -149,248 +156,171 @@ public class LocaleTestFrag extends BaseFrag implements
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
 
-    private static String getAbbr(Locale locale) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return locale.toLanguageTag();  // Returns well formatted BCP-47 language-region, ex: en-US
-        } else {
-            return locale.toString();       // Returns ll_rr language_region, ex: en_US
-        }
-    }
-
-    String buildStr(String[] parts, boolean[] selected, String sep) {
-        StringBuilder strBld = new StringBuilder();
-        for (int idx = 0; idx < Math.min(parts.length, selected.length); idx++) {
-            if (selected[idx]) {
-                if (strBld.length() != 0)
-                    strBld.append(sep);
-                strBld.append(parts[idx]);
-            }
-        }
-        strBld.append(" ");
-        return strBld.toString();
-    }
-
-    final Calendar cal = Calendar.getInstance();
-    final float fvalue = -12.345f;
-    final int ivalue = -123456;
-
-    String localeFmt;
-    String timeFmt;
     boolean tests[];
-    boolean testFmts[];
-    boolean testCals[];
-    boolean testRegions = true;
 
     ExpandableListAdapter mAdapter;
 
     void initTests() {
-        testRegions = mTestRegionsCb.isChecked();
-        tests = new boolean[] {  mFmtCb.isChecked(), mNumCb.isChecked(), mCalCb.isChecked() };
-
-        testFmts = new boolean[]{
-                mMenu.findItem(R.id.locale_menu_fmt_d).isChecked(),
-                mMenu.findItem(R.id.locale_menu_fmt_f).isChecked(),
-                mMenu.findItem(R.id.locale_menu_fmt_g).isChecked(),
-        };
-        testCals = new boolean[]{
-                mMenu.findItem(R.id.locale_menu_cal_time).isChecked(),
-                mMenu.findItem(R.id.locale_menu_cal_date).isChecked(),
-                mMenu.findItem(R.id.locale_menu_cal_day).isChecked(),
-                mMenu.findItem(R.id.locale_menu_cal_month).isChecked(),
-                mMenu.findItem(R.id.locale_menu_cal_full).isChecked(),
-        };
-
-        localeFmt = buildStr(new String[] {"%1$d","%2$f","%2$g"}, testFmts, "/");
-        timeFmt = buildStr(new String[]
-                        {
-                                "%1$tT",    // Time:  hh:mm:ss
-                                "%1$tF",    // Date:  yyyy-mm-dd
-                                "%1$tA",    // Day:   Sunday, Monday, ...
-                                "%1$tB",    // Month: January, February, ..
-                                "%1$tc"},   // Full:  Sun Jul 20 16:17:00 EDT 1969
-                testCals, " ");
+        tests = new boolean[] {  mNanCb.isChecked(), mNotZeroCb.isChecked(), mZeroCb.isChecked() };
     }
 
-    public String getLocaleStr(Locale locale) {
-        StringBuilder sb = new StringBuilder();
+    static class LocPair {
+        LatLng loc1, loc2;
+        public LocPair(LatLng loc1) {
+            this.loc1 = loc1;
+            this.loc2 = loc1;
+        }
+        public LocPair(LatLng loc1, LatLng loc2) {
+            this.loc1 = loc1;
+            this.loc2 = loc2;
+        }
+        public LocPair(double lat1, double lng1) {
+            this.loc1 = new LatLng(lat1, lng1);
+            this.loc2 = this.loc1;
+        }
+        public LocPair(double lat1, double lng1, double lat2, double lng2) {
+            this.loc1 = new LatLng(lat1, lng1);
+            this.loc2 = new LatLng(lat2, lng2);
+        }
+        public String toString() {
+            if (loc1.equals(loc2)) {
+                return String.format("%f,%f", loc1.latitude, loc1.longitude);
+            } else {
+                return String.format("%f,%f %f,%f", loc1.latitude, loc1.longitude, loc2.latitude,
+                        loc2.longitude);
+            }
+        }
+    }
 
-        if (tests[0])
-            sb.append(String.format(locale, localeFmt, ivalue, fvalue));
+    private static final List<LocPair> testPnts = new ArrayList<>();
+    static {
+        testPnts.add(new LocPair(30.44, -91.19));
+        // testPnts.add(new LocPair(31.44, -91.19));
+    }
 
-        if (tests[1]) {
-            NumberFormat format = NumberFormat.getCurrencyInstance(locale);
-            sb.append("NUM[" + format.format(ivalue) + "/" + format.format(fvalue) + "] ");
+
+    /**
+     * @return Approximate kilometers between two earth surface points.
+     *
+     * Law of cosines:
+     *       d = acos( sin φ1 ⋅ sin φ2 + cos φ1 ⋅ cos φ2 ⋅ cos Δλ ) ⋅ R
+     *
+     * Note - Android's Location class has a distance method but
+     * this is accurate enough for points within a few degrees with
+     * less work.
+     */
+
+    private  static double kilometersBetweenLatLng(LatLng g1Position, LatLng g2Position, boolean useFix) {
+        double dValue = Math.sin(Math.toRadians(g1Position.latitude))
+                * Math.sin(Math.toRadians(g2Position.latitude))
+                + Math.cos(Math.toRadians(g1Position.latitude))
+                * Math.cos(Math.toRadians(g2Position.latitude))
+                * Math.cos(Math.toRadians(g2Position.longitude - g1Position.longitude));
+
+        double ans;
+        if (useFix) {
+            // Fix to work around Android math error when same points [30.44, -91.19] generate NaN.
+            // Clamp dValue to <= 1.0 to prevent Not-a-number
+            ans = EARTH_RADIUS_METERS / 1000.0 * Math.acos(Math.min(dValue, 1.0));
+            if (Double.isNaN(ans)) {
+                return 0;
+            }
+        } else {
+            ans = EARTH_RADIUS_METERS / 1000.0  * Math.acos(dValue);
         }
 
-        if (tests[2])
-            sb.append(String.format(locale, timeFmt, cal));
-
-        return sb.toString();
+        return ans;
     }
 
-    public String updateReport(TestLocaleAsync testLocaleAsync) {
+    /**
+     * Calculate distance between two points in latitude and longitude taking
+     * into account height difference. If you are not interested in height
+     * difference pass 0.0. Uses Haversine method as its base.
+     */
+    public static double earthDistanceKm(LatLng gp1, LatLng gp2) {
+
+        double latDistance = Math.toRadians(gp2.latitude - gp1.latitude);
+        double lonDistance = Math.toRadians(gp2.longitude - gp1.longitude);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(gp1.latitude)) * Math.cos(Math.toRadians(gp2.latitude))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double meters =  Math.sqrt(Math.pow(EARTH_RADIUS_METERS * c, 2)); // convert to meters
+        return meters / 1000;   // convert to Kilometers
+    }
+
+    private double earthDistanceKmAndroid(LatLng pos1, LatLng pos2) {
+        float[] meters = new float[3];
+        Location.distanceBetween(pos1.latitude, pos1.longitude, pos2.latitude, pos2.longitude, meters);
+        return meters[0] / 1000;
+    }
+
+    private boolean keepResult(double value) {
+        if (Double.isNaN(value)) {
+            return mNanCb.isChecked();
+        }
+        if (value != 0.0) {
+            return mNotZeroCb.isChecked();
+        }
+        
+        return mZeroCb.isChecked();
+    }
+    
+    public String updateReport(TestMathAsync TestMathAsync) {
 
         StringBuilder resultSb = new StringBuilder(3000);
+      
+        int testCnt = 0;
+        for (LocPair locPair : testPnts) {
 
-        // resultSb.append("Model:").append(Build.MODEL).append("\n");
-        // resultSb.append("OS:").append(Build.VERSION.RELEASE).append("\n\n");
+            List<String> results = new ArrayList<>();
+            double km = kilometersBetweenLatLng(locPair.loc1, locPair.loc2, false);
+            if (keepResult(km))
+                results.add(String.format(" NoFix value=%f", km));
+            km = kilometersBetweenLatLng(locPair.loc1, locPair.loc2, true);
+            if (keepResult(km))
+                results.add(String.format("YesFix value=%f", km));
+            km = earthDistanceKm(locPair.loc1, locPair.loc2);
+            if (keepResult(km))
+                results.add(String.format("Surface value=%f", km));
+            testCnt++;
+            TestMathAsync.sendProgress(testCnt*100 / testPnts.size(), resultSb);
 
-        // Map<String, List<Locale>> languages = new HashMap<>();
-        languages.clear();
-        String localeFmtStr;
-        String abbrLang, language, testFmt;
-        Set<String> isoSet = new HashSet<>();
+            testResults.put(locPair.toString(), results);
 
-        Locale arabic = null;
-        Locale ukrainian = null;
-        Locale defLocale = Locale.getDefault();
-
-        Locale[] locales = Locale.getAvailableLocales();
-        int localeCnt = 0;
-        for (Locale locale : locales) {
-            testFmt = getLocaleStr(locale);
-
-            language = locale.getDisplayLanguage();
-            abbrLang = getAbbr(locale);
-
-            if (!languages.containsKey(testFmt)) {
-                List<Locale> values = new ArrayList<>();
-                languages.put(testFmt, values);
-
-                /*
-                if (false) {
-                    localeFmtStr = String.format(locale, "%6.6s %15.15s ", abbrLang, language);
-                    localeFmtStr += String.format(locale, localeFmt, ivalue, fvalue, fvalue);
-                    localeFmtStr += "NUM[" +format.format(ivalue) + "/" + format.format(fvalue) + "] ";
-                    localeFmtStr += String.format(locale, timeFmt, cal);
-                    localeFmtStr += "\n";
-                    resultSb.append(localeFmtStr);
-                }
-                */
-            }
-
-            String iso = locale.getISO3Language();
-            if (testRegions || !isoSet.contains(iso)) {
-                languages.get(testFmt).add(locale);
-            }
-            isoSet.add(iso);
-
-            if (iso.equals("ara")) {    // language Arabic
-                arabic = locale;
-            }
-            if (iso.equals("ukr")) {    // language Ukrainian
-                ukrainian = locale;
-            }
-
-            /*
-            if (false) {
-                localeFmtStr = String.format(locale, "%6.6s %15.15s ", abbrLang, language);
-                if (tests[0])
-                    localeFmtStr += String.format(locale, localeFmt, ivalue, fvalue, fvalue);
-                if (tests[1])
-                    localeFmtStr += format.format(ivalue) + "/" + format.format(fvalue) + " ";
-                if (tests[2])
-                    localeFmtStr += String.format(locale, timeFmt, cal);
-                localeFmtStr += "\n";
-                // resultSb.append(localeFmtStr);
-                Log.d("Locale", localeFmtStr);
-            }
-            */
-
-            localeCnt++;
-            testLocaleAsync.sendProgress(localeCnt*100 / locales.length, resultSb);
-            if (testLocaleAsync.isCancelled())
+            if (TestMathAsync.isCancelled())
                 break;
         }
 
-        Iterator<Map.Entry<String, List<Locale>>> iter = languages.entrySet().iterator();
+        Iterator<Map.Entry<String, List<String>>> iter = testResults.entrySet().iterator();
         while (iter.hasNext()) {
-            Map.Entry<String, List<Locale>> entry = iter.next();
+            Map.Entry<String, List<String>> entry = iter.next();
             if (entry.getValue().isEmpty()) {
                 iter.remove();
             }
         }
 
-         /*
-        List<String> sortedKeys = new ArrayList<>(languages.keySet());
-        // sortedKeys.addAll(languages.keySet());
-        Collections.sort(sortedKeys);
-
-        for (String testKey : sortedKeys) {
-            String lastIso = "";
-            resultSb.append(String.format(Locale.US, "%3d ", languages.get(testKey).size())).append(testKey).append("\n");
-            if (false) {
-                for (Locale locale : languages.get(testKey)) {
-                    if (!locale.getISO3Language().equals(lastIso)) {
-                        lastIso = locale.getISO3Language();
-                        language = locale.getDisplayLanguage();
-                        abbrLang = getAbbr(locale);
-                        resultSb.append("   ").append(abbrLang).append(" ").append(language).append("\n");
-                    }
-                }
-            }
-        }
-        */
-
-
         resultSb.append("\n ---[Default]---- \n");
-        resultSb.append(getLocalizedString(defLocale, ivalue, fvalue, cal));
-
-        if (ukrainian != null) {
-            Locale.setDefault(ukrainian);
-            resultSb.append("\n ---[" + getAbbr(Locale.getDefault()) + "]---- \n");
-            resultSb.append(getLocalizedString(arabic, ivalue, fvalue, cal));
-            Locale.setDefault(defLocale);
-        }
-
-        if (arabic != null) {
-            Locale.setDefault(arabic);
-            resultSb.append("\n ---[" + getAbbr(Locale.getDefault()) + "]---- \n");
-            resultSb.append(getLocalizedString(arabic, ivalue, fvalue, cal));
-            Locale.setDefault(defLocale);
-        }
+        
 
         if (true) {
             resultSb.append("\n -------------- ");
-            resultSb.append("\nDefault Locale:").append(getAbbr(Locale.getDefault()));
             resultSb.append("\nModel:").append(Build.MODEL);
             resultSb.append("\nOS:").append(Build.VERSION.RELEASE);
             resultSb.append("\nTargetSDK:").append(getString(R.string.targetSdkVersion));
             resultSb.append("\nCompileSDK:").append(getString(R.string.compileSdkVersion));
             resultSb.append("\nBuildTools:").append(getString(R.string.buildToolsVersion));
             resultSb.append("\nJavaVersion:").append(getString(R.string.javaVersion));
-            resultSb.append("\nGradleVersion:").append(getString(R.string.gradleVersion));
+            // resultSb.append("\nGradleVersion:").append(getString(R.string.gradleVersion));
         }
         resultSb.append("\n\n");
 
         return resultSb.toString();
     }
 
-    String  getLocalizedString(Locale locale, int ivalue, float fvalue, Calendar cal) {
-        final String  timeFmt = "cal= %1$tT %1$tF [%1$tc]\n";
-        final String  localeLatLngFmt = "%s %d/%f/%g\n";
-        String strLang = locale.getLanguage();
+ 
 
-        String strFmt = String.format(localeLatLngFmt, "fmt=", ivalue, fvalue, fvalue);
-        strFmt += String.format(timeFmt, cal);
-        String strCat = "cat=" + " " + ivalue + "/" + fvalue  + "\n";
-        String strVal = "val=" + " " + String.valueOf(ivalue) + "/" + String.valueOf(fvalue) + "\n";
-
-        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.getDefault());
-        // format.setCurrency(Currency.getInstance("CZK"));
-        String strNum = "num= " + format.format(ivalue) + "/" + format.format(fvalue) + "\n";
-
-        StringBuilder resultSb = new StringBuilder();
-        resultSb
-                .append(strFmt)
-                .append(strCat)
-                .append(strVal)
-                .append(strNum);
-        return resultSb.toString();
-    }
-
-    public class TestLocaleAsync extends AsyncTask<Void, Integer, String> implements DialogInterface.OnCancelListener {
-
+    public class TestMathAsync extends AsyncTask<Void, Integer, String> implements DialogInterface.OnCancelListener {
 
         ProgressDialog mProgressDialog;
         StringBuilder mResultSb;
@@ -405,7 +335,7 @@ public class LocaleTestFrag extends BaseFrag implements
             // prepare for a progress bar dialog
             mProgressDialog = new ProgressDialog(getContext());
             mProgressDialog.setCancelable(true);
-            mProgressDialog.setMessage("Testing Locales...");
+            mProgressDialog.setMessage("Testing Math...");
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mProgressDialog.setProgress(0);
             mProgressDialog.setMax(100);
@@ -474,20 +404,28 @@ public class LocaleTestFrag extends BaseFrag implements
             case R.id.runTestBtn:
                 initTests();
                 if (mRunBtn.getText().equals(mRunText)) {
-                    mTestLocalAsync = new TestLocaleAsync();
-                    mTestLocalAsync.execute();
+                    mTestMathAsync = new TestMathAsync();
+                    mTestMathAsync.execute();
                  } else {
-                    mTestLocalAsync.cancelRun();
+                    mTestMathAsync.cancelRun();
                  }
                 break;
             case R.id.shareBtn:
+                StringBuffer sb = new StringBuffer(mResultsTv.getText().toString());
+                for (String key : testResults.keySet()) {
+                    List<String> results = testResults.get(key);
+                    for (String result : results) {
+                        String zipcode = posZipcodes.get(key);
+                        sb.append(String.format("\n %s  Result: %s, Zip: %s", key, result, zipcode));
+                    }
+                }
                 ShareUtil.shareViaEmail(getActivity(),
-                        "dlang@wsi.com", "Locale Tester", mResultsTv.getText().toString(), null);
+                        "dlang@wsi.com", "Math Tester", sb.toString(), null);
                 break;
         }
     }
 
-    ExpandableListView mLocaleListView;
+    ExpandableListView mMathListView;
 
     protected void setup() {
         mRunText  = getString(R.string.run_test);
@@ -495,20 +433,71 @@ public class LocaleTestFrag extends BaseFrag implements
         mRunBtn = viewById(mRootView, R.id.runTestBtn);
         mRunBtn.setOnClickListener(this);
 
-        mTestRegionsCb = viewById(mRootView, R.id.testLocalRegionsCb);
         mShareBtn = viewById(mRootView, R.id.shareBtn);
         mShareBtn .setOnClickListener(this);
         
-        mProgress = viewById(mRootView, R.id.localeProgressBar);
+        mProgress = viewById(mRootView, R.id.mathProgressBar);
         mProgress.setVisibility(View.GONE);
 
-        mFmtCb = viewById(mRootView, R.id.localeFmtCb);
-        mNumCb = viewById(mRootView, R.id.localeNumCb);
-        mCalCb = viewById(mRootView, R.id.localeCalCb);
+        mNanCb = viewById(mRootView, R.id.mathNanCb);
+        mNotZeroCb = viewById(mRootView, R.id.mathNotZeroCb);
+        mZeroCb = viewById(mRootView, R.id.mathZeroCb);
 
-        mLocaleListView = viewById(mRootView, R.id.locale_list);
+        mMathListView = viewById(mRootView, R.id.math_list);
         mAdapter = new ExpandableListAdapter();
-        mLocaleListView.setAdapter(mAdapter);
+        mMathListView.setAdapter(mAdapter);
+
+        addZipcodeTests();
+    }
+
+    private void addSurfaceTests() {
+        testPnts.clear();
+        LatLng pos1 = new LatLng(30.44, -91.19);
+
+        double heading = 45.0;
+
+        for (int meters = 10; meters < 1000000; meters *= 10) {
+            testPnts.add(new LocPair(pos1, earthPositionTraveling(pos1, meters, heading)));
+        }
+    }
+
+    private void addZipcodeTests() {
+        testPnts.clear();
+
+        String[] testGeopoints = getResources().getStringArray(R.array.geopoints);
+        for (String testGeopoint : testGeopoints) {
+            String[] parts = testGeopoint.split(",");
+            if (parts.length == 3) {
+                LocPair locPair = new LocPair(Float.parseFloat(parts[0]), Float.parseFloat(parts[1]));
+                testPnts.add(locPair);
+                posZipcodes.put(locPair.toString(), parts[2]);
+            }
+        }
+    }
+
+    // https://github.com/googlemaps/android-maps-utils/blob/master/library/src/com/google/maps/android/SphericalUtil.java
+    /**
+     * Returns the LatLng resulting from moving a distance from an origin
+     * in the specified heading (expressed in degrees clockwise from north).
+            * @param from     The LatLng from which to start.
+     * @param meters The distance to travel.
+     * @param headingDeg  The heading in degrees clockwise from north.
+     */
+    public static LatLng earthPositionTraveling(LatLng from, double meters, double headingDeg) {
+        double distance = meters /  EARTH_RADIUS_METERS;
+        double heading = Math.toRadians(headingDeg);
+        // http://williams.best.vwh.net/avform.htm#LL
+        double fromLat =  Math.toRadians(from.latitude);
+        double fromLng =  Math.toRadians(from.longitude);
+        double cosDistance =  Math.cos(distance);
+        double sinDistance =  Math.sin(distance);
+        double sinFromLat =  Math.sin(fromLat);
+        double cosFromLat =  Math.cos(fromLat);
+        double sinLat = cosDistance * sinFromLat + sinDistance * cosFromLat *  Math.cos(heading);
+        double dLng =  Math.atan2(
+                sinDistance * cosFromLat *  Math.sin(heading),
+                cosDistance - sinFromLat * sinLat);
+        return new LatLng( Math.toDegrees( Math.asin(sinLat)), Math.toDegrees(fromLng + dLng));
     }
 
     // =============================================================================================
@@ -516,8 +505,8 @@ public class LocaleTestFrag extends BaseFrag implements
 
         @Override
         public Object getChild(int groupPosition, int childPosititon) {
-            String language = languages.keySet().toArray()[groupPosition].toString();
-            return languages.get(language).get(childPosititon);
+            String key = testResults.keySet().toArray()[groupPosition].toString();
+            return testResults.get(key).get(childPosititon);
         }
 
         @Override
@@ -529,7 +518,7 @@ public class LocaleTestFrag extends BaseFrag implements
         public View getChildView(int groupPosition, final int childPosition,
                 boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final Locale locale = (Locale) getChild(groupPosition, childPosition);
+            final  String  result = (String) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
                 /*
@@ -542,10 +531,7 @@ public class LocaleTestFrag extends BaseFrag implements
 
             // TextView txtListChild = (TextView) convertView.findViewById(R.id.lblListItem);
             TextView childTx = (TextView)convertView;
-
-            String language = locale.getDisplayLanguage();
-            String abbrLang = getAbbr(locale);
-            String fullMsg = String.format("%6.6s %15.15s ", abbrLang, language) + getLocaleStr(locale);
+            String fullMsg = result;
 
             childTx.setTypeface(Typeface.MONOSPACE, Typeface.NORMAL);
             // childTx.setTextAppearance(R.style.TextFixed14);
@@ -557,18 +543,18 @@ public class LocaleTestFrag extends BaseFrag implements
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            String language = languages.keySet().toArray()[groupPosition].toString();
-            return languages.get(language).size();
+            String language = testResults.keySet().toArray()[groupPosition].toString();
+            return testResults.get(language).size();
         }
 
         @Override
         public Object getGroup(int groupPosition) {
-            return languages.keySet().toArray()[groupPosition].toString();
+            return testResults.keySet().toArray()[groupPosition].toString();
         }
 
         @Override
         public int getGroupCount() {
-            return languages.keySet().size();
+            return testResults.keySet().size();
         }
 
         @Override

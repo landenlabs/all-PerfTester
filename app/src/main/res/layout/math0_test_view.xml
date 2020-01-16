@@ -1,7 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/runTestBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/run_test"/>
+
+        <CheckBox
+            android:id="@+id/testLocalRegionsCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Regions"/>
+
+        <Button
+            android:id="@+id/shareBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Share Results"/>
+
+        <!--
+         style="?android:attr/progressBarStyleHorizontal"
+         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+           android:progressDrawable="@drawable/custom_progress"
+         -->
+        <ProgressBar
+            android:id="@+id/mathProgressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.92"
+            android:background="#c0c0ff"
+
+            android:max="100"
+            android:progressDrawable="@android:drawable/progress_horizontal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/mathNanCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="NaN"/>
+
+        <CheckBox
+            android:id="@+id/mathNotZeroCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="NotZero"/>
+
+        <CheckBox
+            android:id="@+id/mathZeroCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Zero"/>
+
+    </LinearLayout>
+
+
+    <View
+        android:padding="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ff0000"
+        />
+
+    <ExpandableListView
+        android:id="@+id/math_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <com.landenlabs.allperfimages.ui.ExpandablePanel
+        android:id="@+id/panel1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:animationDuration="500"
+        app:collapsedDim="40dp"
+        app:content="@+id/testResultsSv"
+        app:handle="@+id/expandTestBtn">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/expandTestBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(+)" />
+
+            <ScrollView
+                android:layout_below="@+id/expandTestBtn"
+                android:id="@+id/testResultsSv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f0f0f0"
+                android:padding="10dp">
+
+                <!-- android:fontFamily="monospace" -->
+
+                <TextView
+                    android:id="@+id/testResultsTv"
+                    android:background="#e0e0e0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="hello world\nHELLO WORLD\n"
+                    android:textSize="14sp" />
+
+            </ScrollView>
+
+        </RelativeLayout>
+    </com.landenlabs.allperfimages.ui.ExpandablePanel>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#ffe0e0"
+        android:text=" "/>
 
 </LinearLayout>

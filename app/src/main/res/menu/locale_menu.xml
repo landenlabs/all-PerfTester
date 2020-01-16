@@ -2,6 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+    <item
+        android:title="--Formats--" />
     <group
         android:title="format"
         android:id="@+id/locale_menu_fmt"
@@ -21,6 +23,8 @@
             android:title="format %g" />
     </group>
 
+    <item
+        android:title="--Calendar--" />
     <group
         android:title="calendar"
         android:id="@+id/locale_menu_cal"
