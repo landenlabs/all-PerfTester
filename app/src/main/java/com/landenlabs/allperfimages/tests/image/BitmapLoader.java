@@ -28,6 +28,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import androidx.appcompat.content.res.AppCompatResources;
 
 /**
  * Helper class to load Bitmaps from package resources using different loaders to
@@ -46,6 +47,7 @@ public class BitmapLoader {
 
     /**
      * Load bitmap resource - no internally caching.
+     * TODO - verify it is supports density scaling.
      */
     public static class Loader1 implements  Loader {
 
@@ -57,6 +59,13 @@ public class BitmapLoader {
 
     /**
      * Load bitmap resource - drawable cached internally
+     * Supports density scaling.
+     *
+     * From android code (density is passed as 0)
+     *         // If the drawable's XML lives in our current density qualifier,
+     *         // it's okay to use a scaled version from the cache. Otherwise, we
+     *         // need to actually load the drawable from XML.
+     *         final boolean useCache = density == 0 || value.density == mMetrics.densityDpi;
      */
     public static class Loader2 implements  Loader {
 
@@ -74,6 +83,7 @@ public class BitmapLoader {
 
     /**
      * Load bitmap resource - drawable cached internally
+     * Supports density scaling.
      */
     public static class Loader3 implements  Loader {
 
@@ -86,4 +96,18 @@ public class BitmapLoader {
             }
         }
     }
+
+    /**
+     * Load bitmap resource - drawable cached internally
+     * Does not appear to support density scaling.
+     */
+    public static class Loader4 implements  Loader {
+
+        @Override
+        public Bitmap getBitmap(Context context,int resId) {
+            BitmapDrawable bmDrawable  = (BitmapDrawable) AppCompatResources.getDrawable(context, resId);
+            return bmDrawable.getBitmap();
+        }
+    }
+
 }

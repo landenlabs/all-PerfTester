@@ -52,7 +52,7 @@ public class ShareUtil {
      * @param jpegUri
      *            {@link Uri} link to media content
      */
-    public static final void shareViaEmail(Activity activity, String emailTo, String subject, String body, Uri jpegUri) {
+    public static void shareViaEmail(Activity activity, String emailTo, String subject, String body, Uri jpegUri) {
 
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
@@ -86,7 +86,7 @@ public class ShareUtil {
      * @param jpegUri
      *            {@link Uri} link to media content
      */
-    public static final void shareSendEmail(Activity activity, String emailTo, String subject, String body, Uri jpegUri) {
+    public static void shareSendEmail(Activity activity, String emailTo, String subject, String body, Uri jpegUri) {
 
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);

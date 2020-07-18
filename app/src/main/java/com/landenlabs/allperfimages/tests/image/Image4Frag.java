@@ -21,59 +21,53 @@
  *
  */
 
-package com.landenlabs.allperfimages;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import androidx.fragment.app.Fragment;
-import android.util.Log;
+
+package com.landenlabs.allperfimages.tests.image;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+
+import com.landenlabs.allperfimages.R;
+
 
 /**
- * Created by Dennis Lang on 7/8/16.
+ * Demonstrate Image loading
  *
  * @author Dennis Lang (LanDen Labs)
  * @see <a href="http://landenlabs.com/android/index-m.html"> author's web-site </a>
  */
-public abstract class BaseFrag extends Fragment {
 
-    public abstract int getFragId();
-    public abstract String getName();
-    public abstract String getDescription();
-
-    protected View mRootView;
-
+public class Image4Frag extends ImageBaseFrag {
 
     @Override
-    public void onDestroyView()
-    {
-        Log.d("foo", "onDestroyView id=" + getName() + " #" + getFragId());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mRootView = inflater.inflate(R.layout.image4_frag, container, false);
 
-        super.onDestroyView();
-
-        if (! getRetainInstance()) {
-            // Required to prevent duplicate id when Fragment re-created.
-            int fragId = getFragId();
-            Fragment fragment = (getFragmentManager().findFragmentById(fragId));
-            /*
-            if (fragment != null) {
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.remove(fragment);
-                ft.commit();
-            }
-            */
-        }
+        setup();
+        return mRootView;
     }
 
-    Resources.Theme getTheme() {
-        return this.getContext().getTheme();
+    @Override
+    public int getFragId() {
+        return R.id.image4_id;
     }
 
-    Drawable getDrawable(int resId) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return getResources().getDrawable(resId, getTheme());
-        }
-        return getResources().getDrawable(resId);
+    @Override
+    public String getName() {
+        return "Image4";
+    }
+
+    @Override
+    public String getDescription() {
+        return "??";
+    }
+
+    protected void setup() {
+        super.setup(new BitmapLoader.Loader4());
     }
 }
+
+

@@ -38,7 +38,7 @@ import com.landenlabs.allperfimages.R;
  * @see <a href="http://landenlabs.com/android/index-m.html"> author's web-site </a>
  */
 
-public class CompatSeekBar extends android.support.v7.widget.AppCompatSeekBar {
+public class CompatSeekBar extends androidx.appcompat.widget.AppCompatSeekBar {
 
     Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 

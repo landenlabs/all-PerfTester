@@ -1,6 +1,24 @@
+import org.gradle.internal.jvm.Jvm
+
 apply plugin: 'com.android.application'
 
 android {
+
+    compileSdkVersion 28
+
+    defaultConfig {
+        applicationId "com.landenlabs.allperfimages"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 10708
+        versionName "1.07.08"
+
+        resValue "string", "targetSdkVersion", targetSdkVersion.apiString
+        resValue "string", "compileSdkVersion", compileSdkVersion
+        resValue "string", "buildToolsVersion", buildToolsVersion
+        resValue "string", "javaVersion", Jvm.current().javaVersion.toString()
+    }
+
     signingConfigs {
         config {
             keyAlias 'perftester'
@@ -10,27 +28,6 @@ android {
         }
     }
 
-    compileSdkVersion 28
-
-    defaultConfig {
-        applicationId "com.landenlabs.allperfimages"
-        minSdkVersion 19
-        targetSdkVersion 28
-        versionCode 10115
-        versionName "1.01.15"
-
-        resValue "string", "targetSdkVersion", targetSdkVersion.apiString
-        resValue "string", "compileSdkVersion", compileSdkVersion
-        resValue "string", "buildToolsVersion", buildToolsVersion
-        resValue "string", "javaVersion", org.gradle.internal.jvm.Jvm.current().javaVersion.toString()
-    }
-
-    // Save app version in string so resource can be used in layouts
-    applicationVariants.all { variant ->
-        variant.resValue "string", "versionName", "version " + variant.versionName
-    }
-
-
     buildTypes {
         release {
             minifyEnabled false
@@ -39,6 +36,13 @@ android {
         }
     }
 
+    productFlavors {
+    }
+
+    // Save app version in string so resource can be used in layouts
+    applicationVariants.all { variant ->
+        variant.resValue "string", "versionName", "version " + variant.versionName
+    }
 
     lintOptions {
         abortOnError false
@@ -56,9 +60,6 @@ android {
         }
     }
 
-    productFlavors {
-    }
-
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -72,13 +73,13 @@ android {
 
 dependencies {
     // implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
 
     // https://developers.google.com/android/guides/releases
     // Version 17.0.0 forces use of AndroidX
     // implementation 'com.google.android.gms:play-services-analytics:17.0.0'
-    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 }
 
 // Rename app

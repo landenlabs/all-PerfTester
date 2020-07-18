@@ -24,13 +24,15 @@
 package com.landenlabs.allperfimages;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,12 +47,12 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * The {@link PagerAdapter} that will provide
      * fragments for each of the sections. We use a
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * {@link FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -165,7 +167,8 @@ public class MainActivity extends AppCompatActivity {
             new PageItem("Test0", R.layout.fragment_main),
             new PageItem("Image1", R.layout.page1_frag),
             new PageItem("Image2", R.layout.page2_frag),
-            new PageItem("Image3", R.layout.page3_frag),
+       //     new PageItem("Image3", R.layout.page3_frag),
+            new PageItem("Image4", R.layout.page4_frag),
             new PageItem("String", R.layout.string_test_frag),
             new PageItem("Locale", R.layout.locale_test_frag),
             new PageItem("Math0", R.layout.math0_test_frag),
