@@ -358,7 +358,7 @@ public class LocaleTestFrag extends BaseFrag implements
             resultSb.append("\nTargetSDK:").append(getString(R.string.targetSdkVersion));
             resultSb.append("\nCompileSDK:").append(getString(R.string.compileSdkVersion));
             resultSb.append("\nBuildTools:").append(getString(R.string.buildToolsVersion));
-            resultSb.append("\nJavaVersion:").append(getString(R.string.javaVersion));
+            // resultSb.append("\nJavaVersion:").append(getString(R.string.javaVersion));
             // resultSb.append("\nGradleVersion:").append(getString(R.string.gradleVersion));
         }
         resultSb.append("\n\n");

@@ -1,22 +1,22 @@
-import org.gradle.internal.jvm.Jvm
 
 apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 28
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.landenlabs.allperfimages"
-        minSdkVersion 19
-        targetSdkVersion 28
+        minSdkVersion 23
+        targetSdkVersion 33
+
         versionCode 10708
         versionName "1.07.08"
 
         resValue "string", "targetSdkVersion", targetSdkVersion.apiString
         resValue "string", "compileSdkVersion", compileSdkVersion
         resValue "string", "buildToolsVersion", buildToolsVersion
-        resValue "string", "javaVersion", Jvm.current().javaVersion.toString()
+        // resValue "string", "javaVersion", Jvm.current().javaVersion.toString()
     }
 
     signingConfigs {
@@ -34,9 +34,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
         }
-    }
-
-    productFlavors {
     }
 
     // Save app version in string so resource can be used in layouts
@@ -60,11 +57,6 @@ android {
         }
     }
 
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -72,14 +64,11 @@ android {
 }
 
 dependencies {
-    // implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
 
     // https://developers.google.com/android/guides/releases
-    // Version 17.0.0 forces use of AndroidX
-    // implementation 'com.google.android.gms:play-services-analytics:17.0.0'
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 }
 
 // Rename app
