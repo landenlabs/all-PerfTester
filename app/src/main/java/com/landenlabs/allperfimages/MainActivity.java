@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2017 Dennis Lang (LanDen Labs) landenlabs@gmail.com
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or substantial
  * portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
  * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
  * NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
@@ -17,22 +17,13 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang  (1/10/2017)
- * @see http://landenlabs.com
+ * @see https://landenlabs.com
  *
  */
 
 package com.landenlabs.allperfimages;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,21 +31,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
+
 /**
  * @author Dennis Lang (LanDen Labs)
- * @see <a href="http://landenlabs.com/android/index-m.html"> author's web-site </a>
+ * @see <a href="https://landenlabs.com/android/index-m.html"> author's web-site </a>
  */
 public class MainActivity extends AppCompatActivity {
-
-    /**
-     * The {@link PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -72,11 +64,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        /*
+         * The {@link PagerAdapter} that will provide
+         * fragments for each of the sections. We use a
+         * {@link FragmentPagerAdapter} derivative, which will keep every
+         * loaded fragment in memory. If this becomes too memory intensive, it
+         * may be best to switch to a
+         * {@link FragmentStatePagerAdapter}.
+         */
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setAdapter(sectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -91,9 +91,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         */
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -181,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public static class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -230,9 +228,8 @@ public class MainActivity extends AppCompatActivity {
                 LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             m_pageNum = getArguments().getInt(ARG_page_number);
             int layout =  mItems[m_pageNum].mLayout;
-            View rootView = inflater.inflate(layout, container, false);
 
-            return rootView;
+            return inflater.inflate(layout, container, false);
         }
     }
 }

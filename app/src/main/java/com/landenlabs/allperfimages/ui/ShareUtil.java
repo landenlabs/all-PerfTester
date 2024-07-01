@@ -13,6 +13,7 @@ import android.view.View;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by Dennis Lang on 2/25/17.
@@ -117,11 +118,11 @@ public class ShareUtil {
      * @author Nazar Ivanchuk
      *
      */
-    private class SaveJpeg extends AsyncTask<Bitmap, Void, Uri> {
-        Context mContext;
+    private static class SaveJpeg extends AsyncTask<Bitmap, Void, Uri> {
+        final WeakReference<Context> mContextRef;
 
         public SaveJpeg(Context context) {
-            mContext = context;
+            mContextRef =  new WeakReference<>( context);
         }
 
         @Override
@@ -133,9 +134,9 @@ public class ShareUtil {
 
                 ContentValues values = new ContentValues(1);
                 values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
-                uri = mContext.getContentResolver()
+                uri = mContextRef.get().getContentResolver()
                         .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                ostream = mContext.getContentResolver().openOutputStream(uri);
+                ostream = mContextRef.get().getContentResolver().openOutputStream(uri);
 
                 // Jpeg format about 20x faster to export then PNG and smaller image.
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, ostream);

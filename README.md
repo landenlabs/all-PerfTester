@@ -12,4 +12,4 @@ Apk v1.01.15 available in app directory.
   [![Build status](https://travis-ci.org/landenlabs/all_PerfTester.svg?branch=master)](https://travis-ci.org/landenlabs/all_PerfTester)
 
 WebSite
-[http://landenlabs.com/android](http://landenlabs.com/android)
+[https://landenlabs.com/android](https://landenlabs.com/android)

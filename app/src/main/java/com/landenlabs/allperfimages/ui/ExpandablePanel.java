@@ -17,7 +17,7 @@
  *  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  @author Dennis Lang  (Dec-2017)
- *  @see http://landenlabs.com
+ *  @see https://landenlabs.com
  *
  */
 package com.landenlabs.allperfimages.ui;
@@ -26,12 +26,13 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
+
+import androidx.annotation.Nullable;
 
 import com.landenlabs.allperfimages.R;
 
@@ -55,7 +56,7 @@ public class ExpandablePanel extends LinearLayout {
     // How long the expand animation takes
     protected int mAnimationDuration = 0;
 
-    protected ExpandAnimation mAnimation = new ExpandAnimation();
+    protected final ExpandAnimation mAnimation = new ExpandAnimation();
 
     // Listener that gets fired onExpand and onCollapse
     protected OnExpandListener mListener;
@@ -74,7 +75,6 @@ public class ExpandablePanel extends LinearLayout {
         init(context, attrs);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ExpandablePanel(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
@@ -273,17 +273,13 @@ public class ExpandablePanel extends LinearLayout {
             }
         }
 
-        @Override
-        public boolean willChangeBounds() {
-            return true;
-        }
     }
 
     /**
      * Simple OnExpandListener interface
      */
     public interface OnExpandListener {
-        public void onExpand(View handle, View content);
-        public void onCollapse(View handle, View content);
+        void onExpand(View handle, View content);
+        void onCollapse(View handle, View content);
     }
 }

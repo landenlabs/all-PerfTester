@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2017 Dennis Lang (LanDen Labs) landenlabs@gmail.com
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or substantial
  * portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
  * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
  * NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
@@ -17,11 +17,13 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang  (1/10/2017)
- * @see http://landenlabs.com
+ * @see https://landenlabs.com
  *
  */
 
 package com.landenlabs.allperfimages.tests.math;
+
+import static com.landenlabs.allperfimages.ui.Ui.viewById;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -44,12 +46,13 @@ import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.landenlabs.allperfimages.BaseFrag;
 import com.landenlabs.allperfimages.R;
 import com.landenlabs.allperfimages.ui.ShareUtil;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -58,11 +61,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static com.landenlabs.allperfimages.ui.Ui.viewById;
-
 /**
  * @author Dennis Lang (LanDen Labs)
- * @see <a href="http://landenlabs.com"> author's web-site </a>
+ * @see <a href="https://landenlabs.com"> author's web-site </a>
  */
 
 public class Math0TestFrag extends BaseFrag implements
@@ -77,8 +78,8 @@ public class Math0TestFrag extends BaseFrag implements
     Menu mMenu;
 
     TestMathAsync mTestMathAsync;
-    SortedMap<String, List<String>> testResults = new TreeMap<>();
-    Map<String, String> posZipcodes = new HashMap<>();
+    final SortedMap<String, List<String>> testResults = new TreeMap<>();
+    final Map<String, String> posZipcodes = new HashMap<>();
 
     private static final float EARTH_RADIUS_METERS = 6378137f; // meters WGS84 Major axis
 
@@ -105,25 +106,21 @@ public class Math0TestFrag extends BaseFrag implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.math_menu_zip:
-                item.setChecked(true);
-                mMenu.findItem(R.id.math_menu_sfc).setChecked(false);
-                break;
-            case R.id.math_menu_sfc:
-                item.setChecked(true);
-                mMenu.findItem(R.id.math_menu_zip).setChecked(false);
-                break;
+        if (id == R.id.math_menu_zip) {
+            item.setChecked(true);
+            mMenu.findItem(R.id.math_menu_sfc).setChecked(false);
+        } else if (id == R.id.math_menu_sfc) {
+            item.setChecked(true);
+            mMenu.findItem(R.id.math_menu_zip).setChecked(false);
         }
 
         if (item.isChecked()) {
-            switch (id) {
-                case R.id.math_menu_zip:
-                    addZipcodeTests();
-                    return true;
-                case R.id.math_menu_sfc:
-                    addSurfaceTests();
-                    return true;
+            if (id == R.id.math_menu_zip) {
+                addZipcodeTests();
+                return true;
+            } else if (id == R.id.math_menu_sfc) {
+                addSurfaceTests();
+                return true;
             }
         }
 
@@ -156,7 +153,7 @@ public class Math0TestFrag extends BaseFrag implements
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
 
-    boolean tests[];
+    boolean[] tests;
 
     ExpandableListAdapter mAdapter;
 
@@ -165,7 +162,8 @@ public class Math0TestFrag extends BaseFrag implements
     }
 
     static class LocPair {
-        LatLng loc1, loc2;
+        final LatLng loc1;
+        final LatLng loc2;
         public LocPair(LatLng loc1) {
             this.loc1 = loc1;
             this.loc2 = loc1;
@@ -201,10 +199,10 @@ public class Math0TestFrag extends BaseFrag implements
 
     /**
      * @return Approximate kilometers between two earth surface points.
-     *
+     * <p>
      * Law of cosines:
      *       d = acos( sin φ1 ⋅ sin φ2 + cos φ1 ⋅ cos φ2 ⋅ cos Δλ ) ⋅ R
-     *
+     * <p>
      * Note - Android's Location class has a distance method but
      * this is accurate enough for points within a few degrees with
      * less work.
@@ -341,19 +339,15 @@ public class Math0TestFrag extends BaseFrag implements
 
             // set the drawable as progress drawavle
 
-            if (Build.VERSION.SDK_INT >= 21) {
-                mProgressDialog.setProgressDrawable(getResources().getDrawable(R.drawable.custom_progress, getActivity().getTheme()));
-            } else {
-                mProgressDialog.setProgressDrawable(getResources().getDrawable(R.drawable.custom_progress));
-            }
+            mProgressDialog.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.custom_progress, requireActivity().getTheme()));
             mProgressDialog.show();
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            mProgress.setProgress(values[0].intValue());
-            mProgressDialog.setProgress(values[0].intValue());
+            mProgress.setProgress(values[0]);
+            mProgressDialog.setProgress(values[0]);
         }
 
         @Override
@@ -393,33 +387,30 @@ public class Math0TestFrag extends BaseFrag implements
                 mProgressDialog = null;
             }
         }
-    };
+    }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        switch (id) {
-            case R.id.runTestBtn:
-                initTests();
-                if (mRunBtn.getText().equals(mRunText)) {
-                    mTestMathAsync = new TestMathAsync();
-                    mTestMathAsync.execute();
-                 } else {
-                    mTestMathAsync.cancelRun();
-                 }
-                break;
-            case R.id.shareBtn:
-                StringBuffer sb = new StringBuffer(mResultsTv.getText().toString());
-                for (String key : testResults.keySet()) {
-                    List<String> results = testResults.get(key);
-                    for (String result : results) {
-                        String zipcode = posZipcodes.get(key);
-                        sb.append(String.format("\n %s  Result: %s, Zip: %s", key, result, zipcode));
-                    }
+        if (id == R.id.runTestBtn) {
+            initTests();
+            if (mRunBtn.getText().equals(mRunText)) {
+                mTestMathAsync = new TestMathAsync();
+                mTestMathAsync.execute();
+            } else {
+                mTestMathAsync.cancelRun();
+            }
+        } else if (id == R.id.shareBtn) {
+            StringBuffer sb = new StringBuffer(mResultsTv.getText().toString());
+            for (String key : testResults.keySet()) {
+                List<String> results = testResults.get(key);
+                for (String result : results) {
+                    String zipcode = posZipcodes.get(key);
+                    sb.append(String.format("\n %s  Result: %s, Zip: %s", key, result, zipcode));
                 }
-                ShareUtil.shareViaEmail(getActivity(),
-                        "dlang@wsi.com", "Math Tester", sb.toString(), null);
-                break;
+            }
+            ShareUtil.shareViaEmail(getActivity(),
+                    "dlang@wsi.com", "Math Tester", sb.toString(), null);
         }
     }
 
@@ -529,11 +520,10 @@ public class Math0TestFrag extends BaseFrag implements
 
             // TextView txtListChild = (TextView) convertView.findViewById(R.id.lblListItem);
             TextView childTx = (TextView)convertView;
-            String fullMsg = result;
 
             childTx.setTypeface(Typeface.MONOSPACE, Typeface.NORMAL);
             // childTx.setTextAppearance(R.style.TextFixed14);
-            childTx.setText(fullMsg);
+            childTx.setText(result);
             int colorBg = ((groupPosition & 1) == 0) ? 0xffe0ffe0 : 0xffe0e0ff;
             childTx.setBackgroundColor(colorBg);
             return childTx;

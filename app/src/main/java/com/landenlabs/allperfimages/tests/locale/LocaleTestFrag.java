@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2017 Dennis Lang (LanDen Labs) landenlabs@gmail.com
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or substantial
  * portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
  * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
  * NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
@@ -17,11 +17,13 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang  (1/10/2017)
- * @see http://landenlabs.com
+ * @see https://landenlabs.com
  *
  */
 
 package com.landenlabs.allperfimages.tests.locale;
+
+import static com.landenlabs.allperfimages.ui.Ui.viewById;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -43,6 +45,8 @@ import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.landenlabs.allperfimages.BaseFrag;
 import com.landenlabs.allperfimages.R;
 import com.landenlabs.allperfimages.ui.ShareUtil;
@@ -58,11 +62,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import static com.landenlabs.allperfimages.ui.Ui.viewById;
-
 /**
  * @author Dennis Lang (LanDen Labs)
- * @see <a href="http://landenlabs.com/android/index-m.html"> author's web-site </a>
+ * @see <a href="https://landenlabs.com/android/index-m.html"> author's web-site </a>
  */
 
 public class LocaleTestFrag extends BaseFrag implements
@@ -79,7 +81,7 @@ public class LocaleTestFrag extends BaseFrag implements
     Menu mMenu;
 
     TestLocaleAsync mTestLocalAsync;
-    Map<String, List<Locale>> languages = new HashMap<>();
+    final Map<String, List<Locale>> languages = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,20 +106,12 @@ public class LocaleTestFrag extends BaseFrag implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.locale_menu_fmt_d:
-            case R.id.locale_menu_fmt_f:
-            case R.id.locale_menu_fmt_g:
-                item.setChecked(!item.isChecked());
-                return true;
-
-            case R.id.locale_menu_cal_time:
-            case R.id.locale_menu_cal_date:
-            case R.id.locale_menu_cal_day:
-            case R.id.locale_menu_cal_month:
-            case R.id.locale_menu_cal_full:
-                item.setChecked(!item.isChecked());
-                return true;
+        if (id == R.id.locale_menu_fmt_d || id == R.id.locale_menu_fmt_f || id == R.id.locale_menu_fmt_g) {
+            item.setChecked(!item.isChecked());
+            return true;
+        } else if (id == R.id.locale_menu_cal_time || id == R.id.locale_menu_cal_date || id == R.id.locale_menu_cal_day || id == R.id.locale_menu_cal_month || id == R.id.locale_menu_cal_full) {
+            item.setChecked(!item.isChecked());
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -150,11 +144,7 @@ public class LocaleTestFrag extends BaseFrag implements
     }
 
     private static String getAbbr(Locale locale) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return locale.toLanguageTag();  // Returns well formatted BCP-47 language-region, ex: en-US
-        } else {
-            return locale.toString();       // Returns ll_rr language_region, ex: en_US
-        }
+        return locale.toLanguageTag();  // Returns well formatted BCP-47 language-region, ex: en-US
     }
 
     String buildStr(String[] parts, boolean[] selected, String sep) {
@@ -176,9 +166,9 @@ public class LocaleTestFrag extends BaseFrag implements
 
     String localeFmt;
     String timeFmt;
-    boolean tests[];
-    boolean testFmts[];
-    boolean testCals[];
+    boolean[] tests;
+    boolean[] testFmts;
+    boolean[] testCals;
     boolean testRegions = true;
 
     ExpandableListAdapter mAdapter;
@@ -374,7 +364,7 @@ public class LocaleTestFrag extends BaseFrag implements
         String strFmt = String.format(localeLatLngFmt, "fmt=", ivalue, fvalue, fvalue);
         strFmt += String.format(timeFmt, cal);
         String strCat = "cat=" + " " + ivalue + "/" + fvalue  + "\n";
-        String strVal = "val=" + " " + String.valueOf(ivalue) + "/" + String.valueOf(fvalue) + "\n";
+        String strVal = "val=" + " " + ivalue + "/" + fvalue + "\n";
 
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.getDefault());
         // format.setCurrency(Currency.getInstance("CZK"));
@@ -389,8 +379,9 @@ public class LocaleTestFrag extends BaseFrag implements
         return resultSb.toString();
     }
 
-    public class TestLocaleAsync extends AsyncTask<Void, Integer, String> implements DialogInterface.OnCancelListener {
-
+    public class TestLocaleAsync
+            extends AsyncTask<Void, Integer, String>
+            implements DialogInterface.OnCancelListener {
 
         ProgressDialog mProgressDialog;
         StringBuilder mResultSb;
@@ -411,21 +402,16 @@ public class LocaleTestFrag extends BaseFrag implements
             mProgressDialog.setMax(100);
             mProgressDialog.setOnCancelListener(this);
 
-            // set the drawable as progress drawavle
-
-            if (Build.VERSION.SDK_INT >= 21) {
-                mProgressDialog.setProgressDrawable(getResources().getDrawable(R.drawable.custom_progress, getActivity().getTheme()));
-            } else {
-                mProgressDialog.setProgressDrawable(getResources().getDrawable(R.drawable.custom_progress));
-            }
+            // set the drawable as progress drawabloe
+            mProgressDialog.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.custom_progress, requireActivity().getTheme()));
             mProgressDialog.show();
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            mProgress.setProgress(values[0].intValue());
-            mProgressDialog.setProgress(values[0].intValue());
+            mProgress.setProgress(values[0]);
+            mProgressDialog.setProgress(values[0]);
         }
 
         @Override
@@ -465,25 +451,22 @@ public class LocaleTestFrag extends BaseFrag implements
                 mProgressDialog = null;
             }
         }
-    };
+    }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        switch (id) {
-            case R.id.runTestBtn:
-                initTests();
-                if (mRunBtn.getText().equals(mRunText)) {
-                    mTestLocalAsync = new TestLocaleAsync();
-                    mTestLocalAsync.execute();
-                 } else {
-                    mTestLocalAsync.cancelRun();
-                 }
-                break;
-            case R.id.shareBtn:
-                ShareUtil.shareViaEmail(getActivity(),
-                        "dlang@wsi.com", "Locale Tester", mResultsTv.getText().toString(), null);
-                break;
+        if (id == R.id.runTestBtn) {
+            initTests();
+            if (mRunBtn.getText().equals(mRunText)) {
+                mTestLocalAsync = new TestLocaleAsync();
+                mTestLocalAsync.execute();
+            } else {
+                mTestLocalAsync.cancelRun();
+            }
+        } else if (id == R.id.shareBtn) {
+            ShareUtil.shareViaEmail(getActivity(),
+                    "dlang@wsi.com", "Locale Tester", mResultsTv.getText().toString(), null);
         }
     }
 

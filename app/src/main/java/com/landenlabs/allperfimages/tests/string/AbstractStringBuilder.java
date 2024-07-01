@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2017 Dennis Lang (LanDen Labs) landenlabs@gmail.com
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or substantial
  * portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
  * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
  * NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
@@ -17,7 +17,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang  (1/10/2017)
- * @see http://landenlabs.com
+ * @see https://landenlabs.com
  *
  */
 
@@ -153,7 +153,7 @@ import java.util.Arrays;
         * character at index <i>k</i> in the old sequence if <i>k</i> is less
         * than the length of the old character sequence; otherwise, it is the
         * null character <code>'&#92;u0000'</code>.
-        *
+        * <p>
         * In other words, if the <code>newLength</code> argument is less than
         * the current length, the length is changed to the specified length.
         * <p>
@@ -262,7 +262,7 @@ import java.util.Arrays;
            return Character.codePointBefore(value, index);
        }
    
-       /**
+       /*
         * Returns the number of Unicode code points in the specified text
         * range of this sequence. The text range begins at the specified
         * <code>beginIndex</code> and extends to the <code>char</code> at
@@ -292,7 +292,7 @@ import java.util.Arrays;
        }
    */
    
-       /**
+       /*
         * Returns the index within this sequence that is offset from the
         * given <code>index</code> by <code>codePointOffset</code> code
         * points. Unpaired surrogates within the text range given by
@@ -536,7 +536,7 @@ import java.util.Arrays;
         *         if {@code offset < 0} or {@code len < 0}
         *         or {@code offset+len > str.length}
         */
-       public AbstractStringBuilder append(char str[], int offset, int len) {
+       public AbstractStringBuilder append(char[] str, int offset, int len) {
            if (len > 0)                // let arraycopy report AIOOBE for len < 0
                ensureCapacityInternal(count + len);
            System.arraycopy(str, offset, value, count, len);
@@ -562,15 +562,14 @@ import java.util.Arrays;
                value[count++] = 't';
                value[count++] = 'r';
                value[count++] = 'u';
-               value[count++] = 'e';
            } else {
                ensureCapacityInternal(count + 5);
                value[count++] = 'f';
                value[count++] = 'a';
                value[count++] = 'l';
                value[count++] = 's';
-               value[count++] = 'e';
            }
+           value[count++] = 'e';
            return this;
        }
    
@@ -595,19 +594,6 @@ import java.util.Arrays;
            return this;
        }
    
-       /**
-        * Appends the string representation of the {@code int}
-        * argument to this sequence.
-        * <p>
-        * The overall effect is exactly as if the argument were converted
-        * to a string by the method {@link String#valueOf(int)},
-        * and the characters of that string were then
-        * {@link #append(String) appended} to this character sequence.
-        *
-        * @param   i   an {@code int}.
-        * @return  a reference to this object.
-        */
-
        /*
        public AbstractStringBuilder append(int i) {
            if (i == Integer.MIN_VALUE) {
@@ -624,19 +610,6 @@ import java.util.Arrays;
        }
        */
    
-       /**
-        * Appends the string representation of the {@code long}
-        * argument to this sequence.
-        * <p>
-        * The overall effect is exactly as if the argument were converted
-        * to a string by the method {@link String#valueOf(long)},
-        * and the characters of that string were then
-        * {@link #append(String) appended} to this character sequence.
-        *
-        * @param   l   a {@code long}.
-        * @return  a reference to this object.
-        */
-
        /*
        public AbstractStringBuilder append(long l) {
            if (l == Long.MIN_VALUE) {
@@ -653,19 +626,6 @@ import java.util.Arrays;
        }
        */
    
-       /**
-        * Appends the string representation of the {@code float}
-        * argument to this sequence.
-        * <p>
-        * The overall effect is exactly as if the argument were converted
-        * to a string by the method {@link String#valueOf(float)},
-        * and the characters of that string were then
-        * {@link #append(String) appended} to this character sequence.
-        *
-        * @param   f   a {@code float}.
-        * @return  a reference to this object.
-        */
-
        /*
        public AbstractStringBuilder append(float f) {
            new FloatingDecimal(f).appendTo(this);
@@ -673,19 +633,6 @@ import java.util.Arrays;
        }
        */
    
-       /**
-        * Appends the string representation of the {@code double}
-        * argument to this sequence.
-        * <p>
-        * The overall effect is exactly as if the argument were converted
-        * to a string by the method {@link String#valueOf(double)},
-        * and the characters of that string were then
-        * {@link #append(String) appended} to this character sequence.
-        *
-        * @param   d   a {@code double}.
-        * @return  a reference to this object.
-        */
-
        /*
        public AbstractStringBuilder append(double d) {
            new FloatingDecimal(d).appendTo(this);
@@ -722,26 +669,6 @@ import java.util.Arrays;
            return this;
        }
    
-       /**
-        * Appends the string representation of the {@code codePoint}
-        * argument to this sequence.
-        *
-        * <p> The argument is appended to the contents of this sequence.
-        * The length of this sequence increases by
-        * {@link Character#charCount(int) Character.charCount(codePoint)}.
-        *
-        * <p> The overall effect is exactly as if the argument were
-        * converted to a {@code char} array by the method
-        * {@link Character#toChars(int)} and the character in that array
-        * were then {@link #append(char[]) appended} to this character
-        * sequence.
-        *
-        * @param   codePoint   a Unicode code point
-        * @return  a reference to this object.
-        * @exception IllegalArgumentException if the specified
-        * {@code codePoint} isn't a valid Unicode code point
-        */
-
        /*
        public AbstractStringBuilder appendCodePoint(int codePoint) {
            final int count = this.count;
@@ -786,26 +713,6 @@ import java.util.Arrays;
            return this;
        }
    
-       /**
-        * Replaces the characters in a substring of this sequence
-        * with characters in the specified <code>String</code>. The substring
-        * begins at the specified <code>start</code> and extends to the character
-        * at index <code>end - 1</code> or to the end of the
-        * sequence if no such character exists. First the
-        * characters in the substring are removed and then the specified
-        * <code>String</code> is inserted at <code>start</code>. (This
-        * sequence will be lengthened to accommodate the
-        * specified String if necessary.)
-        *
-        * @param      start    The beginning index, inclusive.
-        * @param      end      The ending index, exclusive.
-        * @param      str   String that will replace previous contents.
-        * @return     This object.
-        * @throws     StringIndexOutOfBoundsException  if <code>start</code>
-        *             is negative, greater than <code>length()</code>, or
-        *             greater than <code>end</code>.
-        */
-
        /*
        public AbstractStringBuilder replace(int start, int end, String str) {
            if (start < 0)
@@ -941,7 +848,7 @@ import java.util.Arrays;
         * The overall effect is exactly as if the second argument were
         * converted to a string by the method {@link String#valueOf(Object)},
         * and the characters of that string were then
-        * {@link #insert(int,String) inserted} into this character
+        *  into this character
         * sequence at the indicated offset.
         * <p>
         * The {@code offset} argument must be greater than or equal to
@@ -957,38 +864,6 @@ import java.util.Arrays;
            return insert(offset, String.valueOf(obj));
        }
    
-       /**
-        * Inserts the string into this character sequence.
-        * <p>
-        * The characters of the {@code String} argument are inserted, in
-        * order, into this sequence at the indicated offset, moving up any
-        * characters originally above that position and increasing the length
-        * of this sequence by the length of the argument. If
-        * {@code str} is {@code null}, then the four characters
-        * {@code "null"} are inserted into this sequence.
-        * <p>
-        * The character at index <i>k</i> in the new character sequence is
-        * equal to:
-        * <ul>
-        * <li>the character at index <i>k</i> in the old character sequence, if
-        * <i>k</i> is less than {@code offset}
-        * <li>the character at index <i>k</i>{@code -offset} in the
-        * argument {@code str}, if <i>k</i> is not less than
-        * {@code offset} but is less than {@code offset+str.length()}
-        * <li>the character at index <i>k</i>{@code -str.length()} in the
-        * old character sequence, if <i>k</i> is not less than
-        * {@code offset+str.length()}
-        * </ul><p>
-        * The {@code offset} argument must be greater than or equal to
-        * {@code 0}, and less than or equal to the {@linkplain #length() length}
-        * of this sequence.
-        *
-        * @param      offset   the offset.
-        * @param      str      a string.
-        * @return     a reference to this object.
-        * @throws     StringIndexOutOfBoundsException  if the offset is invalid.
-        */
-
        /*
        public AbstractStringBuilder insert(int offset, String str) {
            if ((offset < 0) || (offset > length()))
@@ -1016,7 +891,7 @@ import java.util.Arrays;
         * The overall effect is exactly as if the second argument were
         * converted to a string by the method {@link String#valueOf(char[])},
         * and the characters of that string were then
-        * {@link #insert(int,String) inserted} into this character
+        *  into this character
         * sequence at the indicated offset.
         * <p>
         * The {@code offset} argument must be greater than or equal to
@@ -1139,7 +1014,7 @@ import java.util.Arrays;
         * The overall effect is exactly as if the second argument were
         * converted to a string by the method {@link String#valueOf(boolean)},
         * and the characters of that string were then
-        * {@link #insert(int,String) inserted} into this character
+        *  into this character
         * sequence at the indicated offset.
         * <p>
         * The {@code offset} argument must be greater than or equal to
@@ -1162,7 +1037,7 @@ import java.util.Arrays;
         * The overall effect is exactly as if the second argument were
         * converted to a string by the method {@link String#valueOf(char)},
         * and the character in that string were then
-        * {@link #insert(int,String) inserted} into this character
+        *  into this character
         * sequence at the indicated offset.
         * <p>
         * The {@code offset} argument must be greater than or equal to
@@ -1189,7 +1064,7 @@ import java.util.Arrays;
         * The overall effect is exactly as if the second argument were
         * converted to a string by the method {@link String#valueOf(int)},
         * and the characters of that string were then
-        * {@link #insert(int,String) inserted} into this character
+        *  into this character
         * sequence at the indicated offset.
         * <p>
         * The {@code offset} argument must be greater than or equal to
@@ -1212,7 +1087,7 @@ import java.util.Arrays;
         * The overall effect is exactly as if the second argument were
         * converted to a string by the method {@link String#valueOf(long)},
         * and the characters of that string were then
-        * {@link #insert(int,String) inserted} into this character
+        *  into this character
         * sequence at the indicated offset.
         * <p>
         * The {@code offset} argument must be greater than or equal to
@@ -1235,7 +1110,7 @@ import java.util.Arrays;
         * The overall effect is exactly as if the second argument were
         * converted to a string by the method {@link String#valueOf(float)},
         * and the characters of that string were then
-        * {@link #insert(int,String) inserted} into this character
+        *  into this character
         * sequence at the indicated offset.
         * <p>
         * The {@code offset} argument must be greater than or equal to
@@ -1258,7 +1133,7 @@ import java.util.Arrays;
         * The overall effect is exactly as if the second argument were
         * converted to a string by the method {@link String#valueOf(double)},
         * and the characters of that string were then
-        * {@link #insert(int,String) inserted} into this character
+        *  into this character
         * sequence at the indicated offset.
         * <p>
         * The {@code offset} argument must be greater than or equal to
@@ -1274,48 +1149,12 @@ import java.util.Arrays;
            return insert(offset, String.valueOf(d));
        }
    
-       /**
-        * Returns the index within this string of the first occurrence of the
-        * specified substring. The integer returned is the smallest value
-        * <i>k</i> such that:
-        * <blockquote><pre>
-        * this.toString().startsWith(str, <i>k</i>)
-        * </pre></blockquote>
-        * is <code>true</code>.
-        *
-        * @param   str   any string.
-        * @return  if the string argument occurs as a substring within this
-        *          object, then the index of the first character of the first
-        *          such substring is returned; if it does not occur as a
-        *          substring, <code>-1</code> is returned.
-        * @throws  NullPointerException if <code>str</code> is
-        *          <code>null</code>.
-        */
-
        /*
        public int indexOf(String str) {
            return indexOf(str, 0);
        }
        */
    
-       /**
-        * Returns the index within this string of the first occurrence of the
-        * specified substring, starting at the specified index.  The integer
-        * returned is the smallest value <tt>k</tt> for which:
-        * <blockquote><pre>
-        *     k >= Math.min(fromIndex, str.length()) &&
-        *                   this.toString().startsWith(str, k)
-        * </pre></blockquote>
-        * If no such value of <i>k</i> exists, then -1 is returned.
-        *
-        * @param   str         the substring for which to search.
-        * @param   fromIndex   the index from which to start the search.
-        * @return  the index within this string of the first occurrence of the
-        *          specified substring, starting at the specified index.
-        * @throws  NullPointerException if <code>str</code> is
-        *            <code>null</code>.
-        */
-
        /*
        public int indexOf(String str, int fromIndex) {
            return String.indexOf(value, 0, count,
@@ -1323,47 +1162,10 @@ import java.util.Arrays;
        }
        */
    
-       /**
-        * Returns the index within this string of the rightmost occurrence
-        * of the specified substring.  The rightmost empty string "" is
-        * considered to occur at the index value <code>this.length()</code>.
-        * The returned index is the largest value <i>k</i> such that
-        * <blockquote><pre>
-        * this.toString().startsWith(str, k)
-        * </pre></blockquote>
-        * is true.
-        *
-        * @param   str   the substring to search for.
-        * @return  if the string argument occurs one or more times as a substring
-        *          within this object, then the index of the first character of
-        *          the last such substring is returned. If it does not occur as
-        *          a substring, <code>-1</code> is returned.
-        * @throws  NullPointerException  if <code>str</code> is
-        *          <code>null</code>.
-        */
-
        /*
        public int lastIndexOf(String str) {
            return lastIndexOf(str, count);
        }
-        */
-
-       /**
-        * Returns the index within this string of the last occurrence of the
-        * specified substring. The integer returned is the largest value <i>k</i>
-        * such that:
-        * <blockquote><pre>
-        *     k <= Math.min(fromIndex, str.length()) &&
-        *                   this.toString().startsWith(str, k)
-        * </pre></blockquote>
-        * If no such value of <i>k</i> exists, then -1 is returned.
-        *
-        * @param   str         the substring to search for.
-        * @param   fromIndex   the index to start the search from.
-        * @return  the index within this sequence of the last occurrence of the
-        *          specified substring.
-        * @throws  NullPointerException if <code>str</code> is
-        *          <code>null</code>.
         */
 
        /*
@@ -1379,7 +1181,7 @@ import java.util.Arrays;
         * sequence, these are treated as single characters for the
         * reverse operation. Thus, the order of the high-low surrogates
         * is never reversed.
-        *
+        * <p>
         * Let <i>n</i> be the character length of this character sequence
         * (not the length in <code>char</code> values) just prior to
         * execution of the <code>reverse</code> method. Then the

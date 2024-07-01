@@ -1,15 +1,15 @@
 /**
  * Copyright (c) 2017 Dennis Lang (LanDen Labs) landenlabs@gmail.com
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
- *
+ * <p>
  * The above copyright notice and this permission notice shall be included in all copies or substantial
  * portions of the Software.
- *
+ * <p>
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
  * LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
  * NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
@@ -17,7 +17,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang  (1/10/2017)
- * @see http://landenlabs.com
+ * @see https://landenlabs.com
  *
  */
 
@@ -31,16 +31,18 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.landenlabs.allperfimages.R;
 
 /**
  * @author Dennis Lang (LanDen Labs)
- * @see <a href="http://landenlabs.com/android/index-m.html"> author's web-site </a>
+ * @see <a href="https://landenlabs.com/android/index-m.html"> author's web-site </a>
  */
 
 public class CompatSeekBar extends androidx.appcompat.widget.AppCompatSeekBar {
 
-    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+    final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
 
     int mTickColor = 0xc0c08080;
     float mMinTic = 0;
@@ -99,7 +101,7 @@ public class CompatSeekBar extends androidx.appcompat.widget.AppCompatSeekBar {
         a.recycle();
 
         if (mTickMark != -1) {
-            mTickMarkDr = getResources().getDrawable(mTickMark);
+            mTickMarkDr = ResourcesCompat.getDrawable(getResources(), mTickMark, getContext().getTheme());
         }
     }
 
@@ -130,10 +132,10 @@ public class CompatSeekBar extends androidx.appcompat.widget.AppCompatSeekBar {
             paint.setColor(mTickColor);
 
             if (perStep > 0)
-            for (float xPer = per1; xPer < per2; xPer += perStep) {
-                float x = xPer * pixelWidth + getPaddingLeft();
-                drawTick(canvas, new RectF(x - dX, 0, x + dX, ticHeight), paint);
-            }
+                for (float xPer = per1; xPer < per2; xPer += perStep) {
+                    float x = xPer * pixelWidth + getPaddingLeft();
+                    drawTick(canvas, new RectF(x - dX, 0, x + dX, ticHeight), paint);
+                }
 
             float x = per2 * pixelWidth + getPaddingLeft();
             drawTick(canvas, new RectF(x - dX, 0, x + dX, ticHeight), paint);
