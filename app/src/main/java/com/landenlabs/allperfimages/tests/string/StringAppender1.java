@@ -17,7 +17,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang  (1/10/2017)
- * @see https://landenlabs.com
+ * @see https://LanDenLabs.com
  *
  */
 
@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * Optimized String Appender. Fewer allocation calls then StringBuilder or StringBuffer.
  * <p>
  * @author Dennis Lang (LanDen Labs)
- * @see <a href="https://landenlabs.com/android/index-m.html"> author's web-site </a>
+ * @see <a href="https://LanDenLabs.com/android/index-m.html"> author's web-site </a>
  */
 
 public class StringAppender1 extends ArrayList<String> {

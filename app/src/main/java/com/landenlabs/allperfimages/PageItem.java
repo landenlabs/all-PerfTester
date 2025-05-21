@@ -17,7 +17,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Dennis Lang  (1/10/2017)
- * @see https://landenlabs.com
+ * @see https://LanDenLabs.com
  *
  */
 
@@ -27,7 +27,7 @@ package com.landenlabs.allperfimages;
  * Created by Dennis Lang on 7/6/16.
  *
  * @author Dennis Lang (LanDen Labs)
- * @see <a href="https://landenlabs.com/android/index-m.html"> author's web-site </a>
+ * @see <a href="https://LanDenLabs.com/android/index-m.html"> author's web-site </a>
  */
 public class PageItem {
     public final String mTitle;
