@@ -46,7 +46,9 @@ import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.MenuProvider;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.landenlabs.allperfimages.BaseFrag;
@@ -86,7 +88,6 @@ public class Math0TestFrag extends BaseFrag implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        setHasOptionsMenu(true);
         mRootView = inflater.inflate(R.layout.math0_test_view, container, false);
 
         setup();
@@ -97,34 +98,39 @@ public class Math0TestFrag extends BaseFrag implements
     // Menu
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        mMenu = menu.addSubMenu("Math Options");
-        inflater.inflate(R.menu.math0_menu, mMenu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.math_menu_zip) {
-            item.setChecked(true);
-            mMenu.findItem(R.id.math_menu_sfc).setChecked(false);
-        } else if (id == R.id.math_menu_sfc) {
-            item.setChecked(true);
-            mMenu.findItem(R.id.math_menu_zip).setChecked(false);
-        }
-
-        if (item.isChecked()) {
-            if (id == R.id.math_menu_zip) {
-                addZipcodeTests();
-                return true;
-            } else if (id == R.id.math_menu_sfc) {
-                addSurfaceTests();
-                return true;
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                mMenu = menu.addSubMenu("Math Options");
+                menuInflater.inflate(R.menu.math0_menu, mMenu);
             }
-        }
 
-        return super.onOptionsItemSelected(item);
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.math_menu_zip) {
+                    item.setChecked(true);
+                    mMenu.findItem(R.id.math_menu_sfc).setChecked(false);
+                } else if (id == R.id.math_menu_sfc) {
+                    item.setChecked(true);
+                    mMenu.findItem(R.id.math_menu_zip).setChecked(false);
+                }
+
+                if (item.isChecked()) {
+                    if (id == R.id.math_menu_zip) {
+                        addZipcodeTests();
+                        return true;
+                    } else if (id == R.id.math_menu_sfc) {
+                        addSurfaceTests();
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
     // =============================================================================================

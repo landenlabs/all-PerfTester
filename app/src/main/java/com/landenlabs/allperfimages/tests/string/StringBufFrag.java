@@ -105,19 +105,15 @@ public class StringBufFrag extends BaseFrag implements
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         int id = seekBar.getId();
-        switch (id) {
-            case R.id.testCntSb:
-                loopCnt = progress;
-                mLoopCntTv.setText(String.format(Locale.US, "LoopCnt(%d)", loopCnt));
-                break;
-            case R.id.repeatCntSb:
-                useCnt = progress;
-                mUseCntTv.setText(String.format(Locale.US, "UseCnt(%d)", useCnt));
-                break;
-            case R.id.appendCntSb:
-                appendCnt = progress;
-                mAppendCntTv.setText(String.format(Locale.US, "AppendCnt(%d)", appendCnt));
-                break;
+        if (id == R.id.testCntSb) {
+            loopCnt = progress;
+            mLoopCntTv.setText(String.format(Locale.US, "LoopCnt(%d)", loopCnt));
+        } else if (id == R.id.repeatCntSb) {
+            useCnt = progress;
+            mUseCntTv.setText(String.format(Locale.US, "UseCnt(%d)", useCnt));
+        } else if (id == R.id.appendCntSb) {
+            appendCnt = progress;
+            mAppendCntTv.setText(String.format(Locale.US, "AppendCnt(%d)", appendCnt));
         }
     }
 
@@ -149,16 +145,13 @@ public class StringBufFrag extends BaseFrag implements
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        switch (id) {
-            case R.id.runTestBtn:
-                updateReport();
-                break;
-            case R.id.controlBtn:
-                if (mControlHolder.getVisibility() == View.GONE)
-                    mControlHolder.setVisibility(View.VISIBLE);
-                else
-                    mControlHolder.setVisibility(View.GONE);
-                break;
+        if (id == R.id.runTestBtn) {
+            updateReport();
+        } else if (id == R.id.controlBtn) {
+            if (mControlHolder.getVisibility() == View.GONE)
+                mControlHolder.setVisibility(View.VISIBLE);
+            else
+                mControlHolder.setVisibility(View.GONE);
         }
     }
 
@@ -189,16 +182,12 @@ public class StringBufFrag extends BaseFrag implements
 
         RadioGroup rg = (RadioGroup)mRootView.findViewById(R.id.sortRg);
         rg.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
-                case R.id.sortNameRb:
-                    sortPerf = sortByName;
-                    break;
-                case R.id.sortMemRb:
-                    sortPerf = sortByMemUsed;
-                    break;
-                case R.id.sortSecRb:
-                    sortPerf = sortBySeconds;
-                    break;
+            if (checkedId == R.id.sortNameRb) {
+                sortPerf = sortByName;
+            } else if (checkedId == R.id.sortMemRb) {
+                sortPerf = sortByMemUsed;
+            } else if (checkedId == R.id.sortSecRb) {
+                sortPerf = sortBySeconds;
             }
 
             updateReport();
@@ -208,19 +197,14 @@ public class StringBufFrag extends BaseFrag implements
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         int id = buttonView.getId();
-        switch (id) {
-            case R.id.test0:
-                tests[0] = isChecked;
-                break;
-            case R.id.test1:
-                tests[1] = isChecked;
-                break;
-            case R.id.test2:
-                tests[2] = isChecked;
-                break;
-            case R.id.test3:
-                tests[3] = isChecked;
-                break;
+        if (id == R.id.test0) {
+            tests[0] = isChecked;
+        } else if (id == R.id.test1) {
+            tests[1] = isChecked;
+        } else if (id == R.id.test2) {
+            tests[2] = isChecked;
+        } else if (id == R.id.test3) {
+            tests[3] = isChecked;
         }
     }
 }

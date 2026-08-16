@@ -1,21 +1,22 @@
+import com.android.build.api.variant.ResValue
+
 // All-PerfTester
 plugins {
     id ("com.android.application")
-    id ("org.jetbrains.kotlin.android") // Prevents duplicate kotlin warnings
 }
 
 android {
 
-    compileSdk 35
-    namespace "com.landenlabs.allperfimages"
+    compileSdk = 36
+    namespace = "com.landenlabs.allperfimages"
 
     defaultConfig {
-        applicationId "com.landenlabs.allperfimages"
-        minSdkVersion 23
-        targetSdkVersion 35
+        applicationId = "com.landenlabs.allperfimages"
+        minSdk = 23
+        targetSdk = 36
 
-        versionCode 20630
-        versionName "2.06.30"
+        versionCode = 20630
+        versionName = "2.06.30"
 
         // Limit languages to following list.
         resourceConfigurations += ['en', 'es']
@@ -26,11 +27,6 @@ android {
         resValue "string", "compileSdkVersion", compileSdkVersion
         resValue "string", "buildToolsVersion", buildToolsVersion
         // resValue "string", "javaVersion", Jvm.current().javaVersion.toString()
-    }
-
-    // Save app version in string so resource can be used in layouts
-    applicationVariants.configureEach { variant ->
-        variant.resValue "string", "versionName", "v" + variant.versionName
     }
 
     signingConfigs {
@@ -50,18 +46,14 @@ android {
     }
 
     buildFeatures.buildConfig = true
+    buildFeatures.resValues = true
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            minifyEnabled = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.release
         }
-    }
-
-    // Save app version in string so resource can be used in layouts
-    applicationVariants.configureEach { variant ->
-        variant.resValue "string", "versionName", "version " + variant.versionName
     }
 
     lint {
@@ -84,18 +76,32 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'com.google.android.material:material:1.14.0'
 
     // https://developers.google.com/android/guides/releases
-    implementation 'com.google.android.gms:play-services-maps:19.2.0'
+    implementation 'com.google.android.gms:play-services-maps:20.0.0'
 }
 
 // Rename app
-android.applicationVariants.configureEach { variant ->
-    variant.outputs.configureEach {
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        // Save app version in string so resource can be used in layouts
+        // (order matches original: "v"+versionName then overwritten by "version "+versionName)
+        variant.resValues.put(
+                variant.makeResValueKey("string", "versionName"),
+                new ResValue("v" + variant.outputs[0].versionName.get(), null)
+        )
+        variant.resValues.put(
+                variant.makeResValueKey("string", "versionName"),
+                new ResValue("version " + variant.outputs[0].versionName.get(), null)
+        )
+
         def ourName = project.parent.name
-        outputFileName = "$ourName-${variant.name}-${variant.versionName}.apk"
-        println "out name= $outputFileName"
+        variant.outputs.forEach { output ->
+            def newName = "${ourName}-${variant.name}-${output.versionName.get()}.apk"
+            output.outputFileName.set(newName)
+            println "out name= $newName"
+        }
     }
 }

@@ -56,7 +56,7 @@ public abstract class BaseFrag extends Fragment {
         if (! getRetainInstance()) {
             // Required to prevent duplicate id when Fragment re-created.
             int fragId = getFragId();
-            Fragment fragment = (getFragmentManager().findFragmentById(fragId));
+            Fragment fragment = (getParentFragmentManager().findFragmentById(fragId));
             /*
             if (fragment != null) {
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();

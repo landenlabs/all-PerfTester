@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -35,8 +36,9 @@ public class ShareUtil {
         // View v1 = iv.getRootView(); //even this works
         // View v1 = findViewById(android.R.id.content); //this works too
         // but gives only content
-        view.setDrawingCacheEnabled(true);
-        return view.getDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        view.draw(new Canvas(bitmap));
+        return bitmap;
     }
 
     /**

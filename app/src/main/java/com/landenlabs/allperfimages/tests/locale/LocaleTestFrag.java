@@ -45,7 +45,9 @@ import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.MenuProvider;
 
 import com.landenlabs.allperfimages.BaseFrag;
 import com.landenlabs.allperfimages.R;
@@ -86,7 +88,6 @@ public class LocaleTestFrag extends BaseFrag implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        setHasOptionsMenu(true);
         mRootView = inflater.inflate(R.layout.locale_test_view, container, false);
 
         setup();
@@ -97,24 +98,29 @@ public class LocaleTestFrag extends BaseFrag implements
     // Menu
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        mMenu = menu.addSubMenu("Locale Options");
-        inflater.inflate(R.menu.locale_menu, mMenu);
-    }
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                mMenu = menu.addSubMenu("Locale Options");
+                menuInflater.inflate(R.menu.locale_menu, mMenu);
+            }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.locale_menu_fmt_d || id == R.id.locale_menu_fmt_f || id == R.id.locale_menu_fmt_g) {
-            item.setChecked(!item.isChecked());
-            return true;
-        } else if (id == R.id.locale_menu_cal_time || id == R.id.locale_menu_cal_date || id == R.id.locale_menu_cal_day || id == R.id.locale_menu_cal_month || id == R.id.locale_menu_cal_full) {
-            item.setChecked(!item.isChecked());
-            return true;
-        }
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.locale_menu_fmt_d || id == R.id.locale_menu_fmt_f || id == R.id.locale_menu_fmt_g) {
+                    item.setChecked(!item.isChecked());
+                    return true;
+                } else if (id == R.id.locale_menu_cal_time || id == R.id.locale_menu_cal_date || id == R.id.locale_menu_cal_day || id == R.id.locale_menu_cal_month || id == R.id.locale_menu_cal_full) {
+                    item.setChecked(!item.isChecked());
+                    return true;
+                }
 
-        return super.onOptionsItemSelected(item);
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
     // =============================================================================================
